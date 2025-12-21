@@ -1,0 +1,99 @@
+/* Body & fonts */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.navbar .nav-link {
+    color: white !important;
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+.navbar .nav-link.btn {
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Card image */
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    border: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #1cc88a, #4e73df);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* Table for cart & orders */
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    margin-top: 50px;
+    font-size: 14px;
+}
+
+
+
+.navbar .dropdown-toggle img {
+    border: 2px solid white;
+    transition: 0.3s;
+}
+
+.navbar .dropdown-toggle img:hover {
+    transform: scale(1.1);
+    border-color: #ffc107;
+}
+
+.card h5 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #4e73df;
+}
+
+.alert {
+    margin-top: 15px;
+}
+
+
