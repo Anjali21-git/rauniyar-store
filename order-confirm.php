@@ -1,37 +1,21 @@
 <?php
 session_start();
-include 'db.php'; // Database connection
-include 'navbar.php'; // Navigation bar
-?>
+include 'includes/db.php';
+include 'includes/auth-check.php';
 
+$user_id = $_SESSION['user_id'];
+$address = $_POST['address'];
+$payment = $_POST['payment'];
 
-<?php
-session_start();
-include 'db.php';
-if(!isset($_SESSION['user_id'])){
-    header("Location: login.php");
-    exit;
+foreach($_SESSION['cart'] as $pid => $qty){
+  $p = $conn->query("SELECT price FROM products WHERE id=$pid")->fetch_assoc();
+  $price = $p['price'];
+
+  $conn->query("INSERT INTO orders 
+    (user_id, product_id, quantity, price, payment_method, address)
+    VALUES('$user_id','$pid','$qty','$price','$payment','$address')");
 }
 
-if(isset($_SESSION['cart'])){
-    foreach($_SESSION['cart'] as $product_id => $qty){
-        $user_id = $_SESSION['user_id'];
-        $conn->query("INSERT INTO orders (user_id, product_id, quantity) VALUES('$user_id','$product_id','$qty')");
-    }
-    unset($_SESSION['cart']);
-    $message = "Order confirmed! Thank you.";
-}
-?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Order Confirmation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h2><?php echo $message; ?></h2>
-    <a href="index.php" class="btn btn-primary mt-3">Back to Shop</a>
-</div>
-</body>
-</html>
+unset($_SESSION['cart']);
+header("Location: order-history.php");
+exit;
