@@ -1,50 +1,54 @@
 <?php
-session_start();
 include 'includes/db.php';
+session_start();
+$errors = [];
 
-$message = "";
-if(isset($_POST['login'])){
-    $email = $_POST['email'];
+if(isset($_POST['login'])) {
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $result = $conn->query("SELECT * FROM users WHERE email='$email'");
-    if($result->num_rows > 0){
-        $user = $result->fetch_assoc();
-        if(password_verify($password, $user['password'])){
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            header("Location: index.php");
-            exit;
-        } else {
-            $message = "Incorrect password!";
-        }
-    } else {
-        $message = "Email not found!";
+    if(empty($email) || empty($password)) $errors[] = "Both fields are required.";
+
+    if(empty($errors)) {
+        $stmt = $conn->prepare("SELECT id,name,password FROM users WHERE email=?");
+        $stmt->bind_param("s",$email);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($id,$name,$hashed_password);
+        if($stmt->num_rows > 0) {
+            $stmt->fetch();
+            if(password_verify($password,$hashed_password)) {
+                $_SESSION['user_id']=$id;
+                $_SESSION['user_name']=$name;
+                header("Location: index.php");
+                exit;
+            } else $errors[]="Invalid email or password.";
+        } else $errors[]="Invalid email or password.";
+        $stmt->close();
     }
 }
+
+include 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - Rauniyar Store</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Login</h2>
-    <?php if($message){ echo "<div class='alert alert-danger'>$message</div>"; } ?>
-    <form method="POST" class="mt-3">
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
-        <button type="submit" name="login" class="btn btn-success">Login</button>
-    </form>
-    <p class="mt-3">Don't have an account? <a href="signup.php">Sign Up</a></p>
+<h2 class="mb-3">Login</h2>
+
+<?php if(!empty($errors)): ?>
+<div class="alert alert-danger">
+    <?php foreach($errors as $error) echo "<div>$error</div>"; ?>
 </div>
-</body>
-</html>
+<?php endif; ?>
+
+<form method="POST" class="w-50 mx-auto">
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" name="login" class="btn btn-dark w-100">Login</button>
+    <p class="mt-2">Don't have an account? <a href="register.php">Register here</a></p>
+</form>
+
+<?php include 'includes/footer.php'; ?>

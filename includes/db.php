@@ -1,14 +1,11 @@
 <?php
 $host = "localhost";
-$dbname = "rauniyar_store";
-$username = "root"; // change if different
-$password = ""; // change if you have password
+$user = "root";
+$pass = "";
+$db   = "rauniyarstore";
 
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    // Set error mode
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 ?>
